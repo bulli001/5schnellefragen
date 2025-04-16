@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5 schnelle Fragen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-primary: #0ff0fc;  /* Neon-Türkis */
+            --neon-secondary: #ff00ff; /* Neon-Pink */
+            --bg: #222222;            /* Dunkelgrau */
+            --card: #2d2d2d;          /* Mittelgrau */
+            --text: #e0e0e0;
+            --text-light: #aaaaaa;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background: var(--bg);
+            background-attachment: fixed;
+        }
+        
+        .container {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #444;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--neon-primary);
+            text-shadow: 0 0 10px var(--neon-primary), 0 0 20px var(--neon-primary);
+        }
+        
+        p.subtitle {
+            color: var(--text-light);
+            margin-bottom: 32px;
+            font-size: 1rem;
+        }
+        
+        .question-container {
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .question {
+            font-size: 1.4rem;
+            line-height: 1.4;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.5s ease;
+            font-weight: 500;
+            color: var(--neon-secondary);
+            text-shadow: 0 0 8px var(--neon-secondary), 0 0 16px rgba(255, 0, 255, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            background: rgba(45, 45, 45, 0.7);
+        }
+        
+        .question.active {
+            opacity: 1;
+            transform: translateY(0);
+            animation: neon-pulse 2s infinite alternate;
+        }
+        
+        @keyframes neon-pulse {
+            from {
+                text-shadow: 0 0 8px var(--neon-secondary), 0 0 16px rgba(255, 0, 255, 0.5);
+            }
+            to {
+                text-shadow: 0 0 12px var(--neon-secondary), 0 0 24px rgba(255, 0, 255, 0.8);
+            }
+        }
+        
+        button {
+            background: transparent;
+            color: var(--neon-primary);
+            border: 2px solid var(--neon-primary);
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--neon-primary), inset 0 0 5px var(--neon-primary);
+            text-shadow: 0 0 5px var(--neon-primary);
+            width: 80%;
+            max-width: 250px;
+        }
+        
+        button:hover {
+            background: rgba(15, 240, 252, 0.1);
+            box-shadow: 0 0 15px var(--neon-primary), inset 0 0 10px var(--neon-primary);
+        }
+        
+        .progress {
+            margin-top: 25px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Kategorie-Stile */
+        .category-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 25px;
+            align-items: center;
+        }
+        
+        .category-btn {
+            background: transparent;
+            color: var(--neon-primary);
+            border: 2px solid var(--neon-primary);
+            padding: 10px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px var(--neon-primary);
+            text-shadow: 0 0 3px var(--neon-primary);
+            width: 80%;
+            max-width: 200px;
+        }
+        
+        .category-btn.active {
+            background: rgba(15, 240, 252, 0.2);
+            box-shadow: 0 0 15px var(--neon-primary);
+        }
+        
+        /* Responsive Anpassungen */
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px;
+                border-radius: 12px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .question {
+                font-size: 1.2rem;
+                padding: 12px;
+            }
+            
+            button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Startbildschirm -->
+        <div id="start-screen">
+            <h1>5 schnelle Fragen</h1>
+            <p class="subtitle">Wähle eine Kategorie</p>
+            
+            <div class="category-selector">
+                <button class="category-btn active" data-category="reflexion">Reflexion</button>
+                <button class="category-btn" data-category="freizeit">Freizeit</button>
+                <button class="category-btn" data-category="zukunft">Zukunft</button>
+            </div>
+            
+            <button id="start-btn">Start</button>
+        </div>
+
+        <!-- Fragenbildschirm -->
+        <div id="questions-screen" class="hidden">
+            <div class="question-container">
+                <div class="question" id="question-text"></div>
+            </div>
+            <button id="next-btn">Weiter</button>
+            <div class="progress" id="progress">Frage 1/5</div>
+        </div>
+
+        <!-- Ende-Bildschirm -->
+        <div id="end-screen" class="hidden">
+            <h1 style="color: var(--neon-primary)">Geschafft! ✨</h1>
+            <p class="subtitle">Was möchtest du jetzt tun?</p>
+            <button id="new-category-btn">Neues Thema</button>
+            <button id="restart-btn">Nochmal spielen</button>
+        </div>
+    </div>
+
+    <script>
+        // Fragen-Datenbank nach Kategorien
+        const questionsDB = {
+            reflexion: [
+                "Was hat dich heute inspiriert?",
+                "Wofür bist du heute dankbar?",
+                "Was hast du heute über dich gelernt?",
+                "Welche kleine Freude hast du heute erlebt?",
+                "Was würdest du deinem jüngeren Ich raten?"
+            ],
+            freizeit: [
+                "Welches Hobby möchtest du mal ausprobieren?",
+                "Welcher Ort entspannt dich am meisten?",
+                "Welches Buch/Film hat dich zuletzt begeistert?",
+                "Wohin würdest du gerne spontan verreisen?",
+                "Was war dein schönster Moment in der Natur?"
+            ],
+            zukunft: [
+                "Was möchtest du in 5 Jahren erreicht haben?",
+                "Welche Fähigkeit willst du als nächstes lernen?",
+                "Wie stellst du dir einen perfekten Tag in Zukunft vor?",
+                "Welche Gewohnheit möchtest du entwickeln?",
+                "Was wird dein zukünftiges Ich dir danken?"
+            ]
+        };
+
+        // Variablen
+        let currentQuestion = 0;
+        let selectedCategory = 'reflexion';
+        const startScreen = document.getElementById('start-screen');
+        const questionsScreen = document.getElementById('questions-screen');
+        const endScreen = document.getElementById('end-screen');
+        const questionText = document.getElementById('question-text');
+        const progressText = document.getElementById('progress');
+        const categoryBtns = document.querySelectorAll('.category-btn');
+
+        // Kategorie auswählen
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedCategory = btn.dataset.category;
+            });
+        });
+
+        // Startet die Fragen
+        document.getElementById('start-btn').addEventListener('click', () => {
+            startScreen.classList.add('hidden');
+            questionsScreen.classList.remove('hidden');
+            showQuestion();
+        });
+
+        // Zeigt die aktuelle Frage mit Animation
+        function showQuestion() {
+            questionText.classList.remove('active');
+            setTimeout(() => {
+                questionText.textContent = questionsDB[selectedCategory][currentQuestion];
+                questionText.classList.add('active');
+            }, 300);
+            progressText.textContent = `Frage ${currentQuestion + 1}/${questionsDB[selectedCategory].length}`;
+        }
+
+        // Nächste Frage
+        document.getElementById('next-btn').addEventListener('click', () => {
+            currentQuestion++;
+            if (currentQuestion < questionsDB[selectedCategory].length) {
+                showQuestion();
+            } else {
+                questionsScreen.classList.add('hidden');
+                endScreen.classList.remove('hidden');
+            }
+        });
+
+        // Neustart mit gleicher Kategorie
+        document.getElementById('restart-btn').addEventListener('click', () => {
+            currentQuestion = 0;
+            endScreen.classList.add('hidden');
+            questionsScreen.classList.remove('hidden');
+            showQuestion();
+        });
+
+        // Neues Thema auswählen
+        document.getElementById('new-category-btn').addEventListener('click', () => {
+            currentQuestion = 0;
+            endScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>  
